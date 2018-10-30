@@ -11,7 +11,6 @@ This is a beginner's project in which a package is created. The package has two 
 
 2. catkin - to install catkin run the following command
 ```
-
 sudo apt-get install ros-kinetic-catkin
 ```
 ## Build
@@ -30,7 +29,6 @@ catkin_make
 To run the nodes separately run the following commands
 In your catkin workspace
 ```
-
 cd ~/catkin_ws
 catkin_make
 source ./devel/setup.bash
@@ -38,13 +36,11 @@ source ./devel/setup.bash
 
 Make sure that a roscore is up and running:
 ```
-
 roscore
 ```
 
 To run the publisher named "talker" enter the following command in a new terminal
 ```
-
 cd ~/catkin_ws
 source ./devel/setup.bash
 rosrun beginner_tutorials talker
@@ -52,10 +48,15 @@ rosrun beginner_tutorials talker
 
 To run the subscriber named "listener" enter the following command in a new terminal
 ```
-
 cd ~/catkin_ws
 source ./devel/setup.bash
 rosrun beginner_tutorials listener
 ```
-
-To stop, press Ctrl+c
+To visualize the publish-subscribe relationships betwwen the nodes as a graph run the following command
+```
+rosrun rqt_graph rqt_graph
+```
+To stop, press Ctrl+C and then enter the following command to clean up the nodes from the rosnode list
+```
+rosnode cleanup
+```
