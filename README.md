@@ -7,8 +7,9 @@
 This is a beginner's project in which a package is created. The package has two nodes and one topic: node one - publisher (talker), node 2 - subscriber (listener), and topic (chatter). The talker publishes a string message on chatter and listener subscribes to chatter.
 
 ## Dependencies
-ROS Kinetic - to install ROS follow the [link](http://wiki.ros.org/kinetic/Installation)
-catkin - to install catkin run the following command
+1. ROS Kinetic - to install ROS follow the [link](http://wiki.ros.org/kinetic/Installation)
+
+2. catkin - to install catkin run the following command
 ```
 
 sudo apt-get install ros-kinetic-catkin
