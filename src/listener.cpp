@@ -28,22 +28,24 @@
  *  @brief UMD ENPM 808X, Week 8, ROS Publisher/Subscriber
  *
  *  @section DESCRIPTION
- *
- *  Listerner for Beginner tutorial for creating a ROS package to publish custom string message
+ *  
+ *  Beginner tutorial for creating a ROS package to publish custom string message
+ *  This tutorial demonstrates simple receipt of messages over the ROS system.
  */
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 
 /**
- * This tutorial demonstrates simple receipt of messages over the ROS system.
+ *   @brief call back to print the message heard on the stream
+ *
+ *   @param msg: const value which contains a const pointer to a string
+ *   @return nothing
  */
-void chatterCallback(const std_msgs::String::ConstPtr& msg)
-{
+void chatterCallback(const std_msgs::String::ConstPtr& msg) {
   ROS_INFO("I heard: [%s]", msg->data.c_str());
 }
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   /**
    * The ros::init() function needs to see argc and argv so that it can perform
    * any ROS arguments and name remapping that were provided at the command line.
