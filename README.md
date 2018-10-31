@@ -52,7 +52,7 @@ cd ~/catkin_ws
 source ./devel/setup.bash
 rosrun beginner_tutorials listener
 ```
-To visualize the publish-subscribe relationships betwwen the nodes as a graph run the following command
+To visualize the publish-subscribe relationships between the nodes as a graph run the following command
 ```
 rosrun rqt_graph rqt_graph
 ```
