@@ -34,6 +34,7 @@
  */
 #include <sstream>
 #include "ros/ros.h"
+#include <log4cxx/logger.h>
 #include "std_msgs/String.h"
 
 int main(int argc, char **argv) {
@@ -76,6 +77,10 @@ int main(int argc, char **argv) {
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
   ros::Rate loop_rate(10);
+  // Change the logging level of this node to Debug
+  log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(
+      ros::console::g_level_lookup[ros::console::levels::Debug]);
+  ros::console::notifyLoggerLevelsChanged();
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -92,7 +97,14 @@ int main(int argc, char **argv) {
     ss << "First ROS package " << count;
     msg.data = ss.str();
 
-    ROS_INFO("%s", msg.data.c_str());
+    // Generate loggging messages of different severities
+    ROS_DEBUG_STREAM_ONCE("This is a logging message of the DEBUG severity");
+    ROS_INFO_STREAM_ONCE("This is a logging message of the INFO severity");
+    ROS_WARN_STREAM_ONCE("This is a logging message of the WARN severity");
+    ROS_ERROR_STREAM_ONCE("This is a logging message of the ERROR severity");
+    ROS_FATAL_STREAM_ONCE("This is a logging message of the FATAL severity");
+
+    ROS_INFO_STREAM("" << msg.data.c_str());
 
     /**
      * The publish() function is how you send messages. The parameter
