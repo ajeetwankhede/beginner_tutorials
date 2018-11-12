@@ -22,20 +22,41 @@
  *  @copyright MIT License 2018 Ajeet Wankhede
  *  @file    talker.cpp
  *  @author  Ajeet Wankhede
- *  @date    10/29/2018
+ *  @date    11/06/2018
  *  @version 1.0
  *
- *  @brief UMD ENPM 808X, Week 8, ROS Publisher/Subscriber
+ *  @brief UMD ENPM 808X, Week 10, ROS Publisher/Subscriber
  *
  *  @section DESCRIPTION
  *
  *  Beginner tutorial for creating a ROS package to publish custom string message
  *  This tutorial demonstrates simple sending of messages over the ROS system.
  */
+#include <log4cxx/logger.h>
+#include <std_srvs/Empty.h>
 #include <sstream>
 #include "ros/ros.h"
-#include <log4cxx/logger.h>
 #include "std_msgs/String.h"
+#include "beginner_tutorials/change_text.h"
+
+/**
+ * This is a message object. You stuff it with data, and then publish it.
+ */
+extern std::string message = "First ROS package ";
+
+/**
+ *   @brief Service for changing the text message
+ *
+ *   @param req: request by client
+ *   @param res: response of the server
+ *
+ *   @return bool
+ */
+bool changeText(beginner_tutorials::change_text::Request& req,
+                beginner_tutorials::change_text::Response& res) {
+  message = req.newString;
+  return true;
+}
 
 int main(int argc, char **argv) {
   /**
@@ -49,6 +70,28 @@ int main(int argc, char **argv) {
    * part of the ROS system.
    */
   ros::init(argc, argv, "talker");
+  // Change the logging level of this node to Debug
+  log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(
+      ros::console::g_level_lookup[ros::console::levels::Debug]);
+  ros::console::notifyLoggerLevelsChanged();
+  double frequency = 10;
+  // Check if any argument is passed
+  if (argc == 2) {
+    frequency = atoi(argv[1]);
+    // Check if the frequency is less than zero
+    if (frequency < 0) {
+      ROS_FATAL_STREAM("The frequency needs to be a positive real number.");
+      return -1;
+    }
+    // Check is the frequency is equal to zero
+    if (frequency == 0) {
+      ROS_WARN_STREAM("The frequency is 0. It should be greater than zero.");
+      return -1;
+    }
+  }
+  // Print the set frequency
+  ROS_DEBUG_STREAM(
+      "The frequency of the talker node is set to " << frequency << ".");
 
   /**
    * NodeHandle is the main access point to communications with the ROS system.
@@ -56,6 +99,9 @@ int main(int argc, char **argv) {
    * NodeHandle destructed will close down the node.
    */
   ros::NodeHandle n;
+
+  // Register our service with the master
+  ros::ServiceServer server = n.advertiseService("change_text", changeText);
 
   /**
    * The advertise() function is how you tell ROS that you want to
@@ -76,11 +122,7 @@ int main(int argc, char **argv) {
    */
   ros::Publisher chatter_pub = n.advertise<std_msgs::String>("chatter", 1000);
 
-  ros::Rate loop_rate(10);
-  // Change the logging level of this node to Debug
-  log4cxx::Logger::getLogger(ROSCONSOLE_DEFAULT_NAME)->setLevel(
-      ros::console::g_level_lookup[ros::console::levels::Debug]);
-  ros::console::notifyLoggerLevelsChanged();
+  ros::Rate loop_rate(frequency);
 
   /**
    * A count of how many messages we have sent. This is used to create
@@ -88,21 +130,15 @@ int main(int argc, char **argv) {
    */
   int count = 0;
   while (ros::ok()) {
-    /**
-     * This is a message object. You stuff it with data, and then publish it.
-     */
-    std_msgs::String msg;
+    // Check if the message is empty
+    if (message == "") {
+      ROS_ERROR_STREAM("The message is empty.");
+    }
 
     std::stringstream ss;
-    ss << "First ROS package " << count;
+    ss << message << count;
+    std_msgs::String msg;
     msg.data = ss.str();
-
-    // Generate loggging messages of different severities
-    ROS_DEBUG_STREAM_ONCE("This is a logging message of the DEBUG severity");
-    ROS_INFO_STREAM_ONCE("This is a logging message of the INFO severity");
-    ROS_WARN_STREAM_ONCE("This is a logging message of the WARN severity");
-    ROS_ERROR_STREAM_ONCE("This is a logging message of the ERROR severity");
-    ROS_FATAL_STREAM_ONCE("This is a logging message of the FATAL severity");
 
     ROS_INFO_STREAM("" << msg.data.c_str());
 
