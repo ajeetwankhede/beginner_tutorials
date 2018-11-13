@@ -22,10 +22,10 @@
  *  @copyright MIT License 2018 Ajeet Wankhede
  *  @file    listener.cpp
  *  @author  Ajeet Wankhede
- *  @date    11/06/2018
+ *  @date    10/29/2018
  *  @version 1.0
  *
- *  @brief UMD ENPM 808X, Week 10, ROS Publisher/Subscriber
+ *  @brief UMD ENPM 808X, Week 8, ROS Publisher/Subscriber
  *
  *  @section DESCRIPTION
  *  
