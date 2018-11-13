@@ -43,7 +43,7 @@
 
 // Create a struct containing the text message
 struct text {
-  std::string message = "First ROS package ";
+  std::string message;
 } t;
 
 /**
@@ -148,6 +148,7 @@ int main(int argc, char **argv) {
    * a unique string for each message.
    */
   int count = 0;
+  t.message = "First ROS package ";
   while (ros::ok()) {
     // Sending the transform
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "talk"));
