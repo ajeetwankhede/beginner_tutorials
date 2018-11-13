@@ -1,8 +1,13 @@
 <launch>
-  <!-- Tag for argument -->
+  <!-- Tag for frequency argument -->
   <arg 
     name = "frequency" 
     default = "10" 
+  />
+  <!-- Tag for record argument -->
+  <arg 
+    name = "record" 
+    default = "false" 
   />
   <!-- Tags of talker node -->
   <node
@@ -19,5 +24,13 @@
     name="listener"
     output="screen"
     launch-prefix="gnome-terminal --command"	
+  />
+  <!-- Tags of rosbag node -->
+  <node
+    pkg="rosbag"
+    type="record"
+    name="record"
+    args = "-a -O $(find beginner_tutorials)/results/recordedData.bag"
+    if = "$(arg record)"
   />
 </launch>
