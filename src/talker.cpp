@@ -22,39 +22,47 @@
  *  @copyright MIT License 2018 Ajeet Wankhede
  *  @file    talker.cpp
  *  @author  Ajeet Wankhede
- *  @date    11/06/2018
+ *  @date    11/12/2018
  *  @version 1.0
  *
- *  @brief UMD ENPM 808X, Week 10, ROS Publisher/Subscriber
+ *  @brief UMD ENPM 808X, Week 8, ROS Publisher/Subscriber
  *
  *  @section DESCRIPTION
  *
  *  Beginner tutorial for creating a ROS package to publish custom string message
- *  This tutorial demonstrates simple sending of messages over the ROS system.
+ *  This tutorial demonstrates simple publishing of messages over the ROS system.
+ *  This node broadcasts a tf frame /talk with /world
  */
 #include <log4cxx/logger.h>
 #include <std_srvs/Empty.h>
 #include <sstream>
 #include "ros/ros.h"
+#include <tf/transform_broadcaster.h>
 #include "std_msgs/String.h"
 #include "beginner_tutorials/change_text.h"
+
+// Create a struct containing the text message
+struct text {
+  std::string message = "First ROS package ";
+} t;
 
 /**
  * This is a message object. You stuff it with data, and then publish it.
  */
-extern std::string message = "First ROS package ";
+//std::string message = "First ROS package ";
 
 /**
  *   @brief Service for changing the text message
  *
  *   @param req: request by client
- *   @param res: response of the server
+ *   @param res: request of the server
  *
  *   @return bool
  */
 bool changeText(beginner_tutorials::change_text::Request& req,
                 beginner_tutorials::change_text::Response& res) {
-  message = req.newString;
+  t.message = req.newString;
+  res.respString = t.message;
   return true;
 }
 
@@ -103,6 +111,17 @@ int main(int argc, char **argv) {
   // Register our service with the master
   ros::ServiceServer server = n.advertiseService("change_text", changeText);
 
+  // Create a TransformBroadcaster object which will be used to 
+  // boardcast the transformation
+  static tf::TransformBroadcaster br;
+  // Create a Transform object
+  tf::Transform transform;
+  // Set translation and rotation for the talk frame with respect to world frame
+  transform.setOrigin( tf::Vector3(2.0, 5.0, 0.0) );
+  tf::Quaternion q;
+  q.setRPY(0, 0, 1.57);
+  transform.setRotation(q);
+
   /**
    * The advertise() function is how you tell ROS that you want to
    * publish on a given topic name. This invokes a call to the ROS
@@ -130,13 +149,15 @@ int main(int argc, char **argv) {
    */
   int count = 0;
   while (ros::ok()) {
+    // Sending the transform
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "talk"));
     // Check if the message is empty
-    if (message == "") {
+    if (t.message == "") {
       ROS_ERROR_STREAM("The message is empty.");
     }
 
     std::stringstream ss;
-    ss << message << count;
+    ss << t.message << count;
     std_msgs::String msg;
     msg.data = ss.str();
 
