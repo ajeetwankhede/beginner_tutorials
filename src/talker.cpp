@@ -36,8 +36,8 @@
 #include <log4cxx/logger.h>
 #include <std_srvs/Empty.h>
 #include <sstream>
+#include "tf/transform_broadcaster.h"
 #include "ros/ros.h"
-#include <tf/transform_broadcaster.h>
 #include "std_msgs/String.h"
 #include "beginner_tutorials/change_text.h"
 
@@ -45,11 +45,6 @@
 struct text {
   std::string message;
 } t;
-
-/**
- * This is a message object. You stuff it with data, and then publish it.
- */
-//std::string message = "First ROS package ";
 
 /**
  *   @brief Service for changing the text message
@@ -111,13 +106,13 @@ int main(int argc, char **argv) {
   // Register our service with the master
   ros::ServiceServer server = n.advertiseService("change_text", changeText);
 
-  // Create a TransformBroadcaster object which will be used to 
+  // Create a TransformBroadcaster object which will be used to
   // boardcast the transformation
   static tf::TransformBroadcaster br;
   // Create a Transform object
   tf::Transform transform;
   // Set translation and rotation for the talk frame with respect to world frame
-  transform.setOrigin( tf::Vector3(2.0, 5.0, 0.0) );
+  transform.setOrigin(tf::Vector3(2.0, 5.0, 0.0));
   tf::Quaternion q;
   q.setRPY(0, 0, 1.57);
   transform.setRotation(q);
@@ -151,7 +146,8 @@ int main(int argc, char **argv) {
   t.message = "First ROS package ";
   while (ros::ok()) {
     // Sending the transform
-    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "talk"));
+    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(),
+                     "world", "talk"));
     // Check if the message is empty
     if (t.message == "") {
       ROS_ERROR_STREAM("The message is empty.");
