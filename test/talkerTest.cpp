@@ -42,7 +42,7 @@
  * @brief This is a test to check the existence of ROS service change_text 
  * provided by talker node
  */
-TEST(TalkerTest, serviceExistenceTest){
+TEST(TalkerTest, serviceExistenceTest) {
   /**
    * NodeHandle is the main access point to communications with the ROS system.
    * The first NodeHandle constructed will fully initialize this node, and the last
