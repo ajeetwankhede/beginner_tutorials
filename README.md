@@ -4,8 +4,7 @@
 </p>
 
 ## Overview
-This is a beginner's project in which a package is created. The package has two nodes, one topic, and one service: node one - publisher (talker), node 2 - subscriber (listener), and topic (chatter). The talker publishes a string message on chatter and listener subscribes to chatter. The service change_text is used to modify the text message which is published by the talker node. 
-Also, a launch file is present to launch both the talker and listener nodes together. It accepts an argument to change the frequecny of publishing the message by the node talker on the topic chatter.
+This is a beginner's project in which a package is created. The package has two nodes and one topic: node one - publisher (talker), node 2 - subscriber (listener), and topic (chatter). The talker publishes a string message on chatter and listener subscribes to chatter.
 
 ## Dependencies
 1. ROS Kinetic - to install ROS follow the [link](http://wiki.ros.org/kinetic/Installation)
