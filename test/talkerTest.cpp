@@ -35,6 +35,8 @@
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 #include <ros/service_client.h>
+#include <math.h>
+#include <tf/transform_listener.h>
 #include "std_msgs/String.h"
 #include "beginner_tutorials/change_text.h"
 
@@ -71,21 +73,46 @@ TEST(TalkerTest, serviceTest) {
   ros::ServiceClient client =
       n.serviceClient<beginner_tutorials::change_text>("change_text");
   // Create a service object
-  /*beginner_tutorials::change_text srv;
+  beginner_tutorials::change_text srv;
   // Assign the text that needs to be changed
   srv.request.newString = "Testing change_text service";
   // Call the service
   client.call(srv);
   // Check the response
   EXPECT_STREQ("Testing change_text service", srv.response.respString.c_str());
-  */
-  beginner_tutorials::change_text::Request req;
-  beginner_tutorials::change_text::Response resp;
+}
 
-  req.newString = "Testing change_text service";
-  std::string expectedString = req.newString;
-
-  bool success = client.call(req, resp);
-  EXPECT_TRUE(success);
-  EXPECT_EQ(expectedString, resp.respString);
+/**
+ * @brief This is a test to check if the node broadcasts correct tf frame
+ */
+TEST(TalkerTest, tfTest) {
+  /**
+   * NodeHandle is the main access point to communications with the ROS system.
+   * The first NodeHandle constructed will fully initialize this node, and the last
+   * NodeHandle destructed will close down the node.
+   */
+  ros::NodeHandle n;
+  // Write a tf listener
+  tf::TransformListener listener;
+  tf::StampedTransform transform;
+  while (n.ok()) {
+    try {
+      listener.lookupTransform("/talk", "/world", ros::Time(0), transform);
+      break;
+    }
+    catch (tf::TransformException &ex) {
+        ROS_ERROR("%s", ex.what());
+        ros::Duration(1.0).sleep();
+        continue;
+    }
+  }
+  // Adding the transforms
+  double transformX = -5.0;
+  double transformY = 2.0;
+  double transformZ = 0.0;
+  double offset = 0.1;
+  // Check the transfroms
+  EXPECT_NEAR(transformX, transform.getOrigin().x(), offset);
+  EXPECT_NEAR(transformY, transform.getOrigin().y(), offset);
+  EXPECT_NEAR(transformZ, transform.getOrigin().z(), offset);
 }
