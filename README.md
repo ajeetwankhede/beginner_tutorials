@@ -108,13 +108,13 @@ To see the boardcasting of TF frames by the talker node run the following comman
 ```
 rosrun tf tf_echo /world /talk
 ```
-To generate a pdf containing tf frames tree using view_frames run the following command in a new terminal. Make sure the talker node is running.
-```
-rosrun tf view_frames
-```
 To verify the tf frames runtime run the following command in a new terminal. Make sure the talker node is running
 ```
 rosrun rqt_tf_tree rqt_tf_tree
+```
+To generate a pdf containing tf frames tree using view_frames run the following command in a new terminal. Make sure the talker node is running.
+```
+rosrun tf view_frames
 ```
 To view the pdf output run the following command.
 ```
